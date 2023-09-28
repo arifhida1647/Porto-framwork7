@@ -1,0 +1,38 @@
+<template>
+    <div class="page">
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding">
+                <div class="left">
+                    <a class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Back</span>
+                    </a>
+                </div>
+                <div class="title">Location</div>
+            </div>
+        </div>
+        <div class="page-content">
+            <div id="lokasi">belum diset lokasi</div>
+            <button id="tombolLokasi" class="button button-fill"  @click=${getLocation}>ambil lokasi</button>
+        </div>
+    </div>
+</template>
+<script>
+    export default (props, { $store }) => {
+        const getLocation = () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                alert("Browser tidak mendukung");
+            }
+        }
+        const showPosition = (position) => {
+            var lokasi = document.getElementById("lokasi");
+            lokasi.innerHTML = 'Lintang: ' + position.coords.latitude + "<br>Bujur: " + position.coords.longitude;
+        }
+
+
+        return $render;
+    };
+</script>

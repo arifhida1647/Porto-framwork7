@@ -1,0 +1,69 @@
+    <template>
+        <div class="page">
+            <div class="navbar">
+                <div class="navbar-bg"></div>
+                <div class="navbar-inner sliding">
+                    <div class="left">
+                        <a class="link back">
+                            <i class="icon icon-back"></i>
+                            <span class="if-not-md">Back</span>
+                        </a>
+                    </div>
+                    <div class="title">Buttons</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="camera">
+                    <video id="video">Video Stream Not Available</video>
+                    <button id="startbutton" class="button button-fill" @click=${takePhoto}>Take Photo</button>
+                    <canvas id="canvas"></canvas>
+                    <div class="output">
+                        <img id="photo" alt="The screen capture will appear in this box."/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <script>
+        export default (props, {$store}) => {
+            const width = 320;
+            const height = 0;
+            const streaming = false;
+            let video = null;
+            let canvas = null;
+            let photo = null;
+
+            const takePhoto = () =>{
+                canvas = document.getElementById('canvas');
+                photo = document.getElementById('photo');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video,0,0);
+                canvas.hidden = true;
+                photo.src = canvas.toDataURL('image/webp');
+
+            }
+
+            const startup = () => {
+                navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+                    .then(function (stream) {
+                        video = document.getElementById("video");
+                        video.srcObject = stream;
+                        video.play();
+                        video.hidden = true;
+                    }).catch((err) => {
+                        console.log("an error occurred!" + err);
+                    });
+            }
+            
+            // Check if navigator.mediaDevices is defined before calling startup()
+            if (navigator.mediaDevices) {
+                startup();
+            } else {
+                alert("browser tidak mendukung kamera");
+            }
+
+            return $render;
+        }
+    </script>
